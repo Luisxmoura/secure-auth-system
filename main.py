@@ -105,22 +105,31 @@ def login(users):
         print("Account is locked due to too many failed attempts.")
         return
 
-    password = input("Password: ")
+    while True:
+        password = input("Password (or type 'exit' to cancel): ")
 
-    if verify_password(password, user["password_hash"], user["salt"]):
-        print("Login successful!")
-        user["failed_attempts"] = 0
+        if password.lower() == "exit":
+            print("Returning to main menu.")
+            return
+
+        if verify_password(password, user["password_hash"], user["salt"]):
+            print("Login successful!")
+            user["failed_attempts"] = 0
+            save_users(users)
+            return
+        else:
+            user["failed_attempts"] += 1
+            remaining = MAX_ATTEMPTS - user["failed_attempts"]
+
+            if remaining > 0:
+                print(f"Wrong password. Attempts remaining: {remaining}")
+            else:
+                user["locked"] = True
+                print("Account locked due to multiple failed attempts.")
+                save_users(users)
+                return
+
         save_users(users)
-    else:
-        user["failed_attempts"] += 1
-        print("Wrong password.")
-
-        if user["failed_attempts"] >= MAX_ATTEMPTS:
-            user["locked"] = True
-            print("Account locked due to multiple failed attempts.")
-
-        save_users(users)
-
 
 # -------------------------
 # Recover Password
