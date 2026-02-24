@@ -134,4 +134,4 @@ This project demonstrates understanding of:
 ## 👨‍💻 Author
 
 Luis Moura  
-Engineering Informatics Student
+Computer Engineering Student
